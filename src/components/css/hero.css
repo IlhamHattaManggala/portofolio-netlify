@@ -1,0 +1,6 @@
+@media (max-width: 767px) {
+  #hero {
+    background-image: none !important;
+    background-color: #111827; /* contoh background gelap */
+  }
+}

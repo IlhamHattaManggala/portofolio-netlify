@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: #1a1a1a; /* Hitam keabu-abuan */
+  background-color: rgb(17, 24, 39); /* Abu-abu sangat terang */
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: inherit; /* Mengambil dari :root */
+  color: inherit; /* Jaga konsistensi warna teks */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f5f5f5;
+    background-color: rgb(17, 24, 39);
+  }
+}
