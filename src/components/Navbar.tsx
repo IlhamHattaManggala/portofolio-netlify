@@ -126,6 +126,14 @@ const Navbar = () => {
             >
               Kontak
             </a>
+            <a
+              href="/resume-ilham.pdf"
+              download
+              className="block text-center bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-200"
+              onClick={() => setIsMobileOpen(false)}
+            >
+              Download Resume
+            </a>
           </div>
         )}
       </div>
