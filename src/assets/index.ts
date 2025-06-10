@@ -25,6 +25,10 @@ import Unity from "./skills/Unity.png";
 import Vscode from "./skills/Visual Studio Code (VS Code).png";
 import Dicoding1 from "../assets/portfolio/Dicoding/Belajar Dasar Pemograman Web.png"
 import Dicoding2 from "../assets/portfolio/Dicoding/Pemograman Dart.png"
+import Dicoding3 from "../assets/portfolio/Dicoding/Belajar Dasar Manajement Proyek.png"
+import Dicoding4 from "../assets/portfolio/Dicoding/Belajar Prinsip Pemograman SOLID.png"
+import Dicoding5 from "../assets/portfolio/Dicoding/Memulai Pemograman Dengan C.png"
+import Dicoding6 from "../assets/portfolio/Dicoding/Memulai Pemograman Dengan Java.png"
 import Huawei1 from "../assets/portfolio/Huawei/AI-Basics.png"
 import Huawei2 from "../assets/portfolio/Huawei/CN-CRA-Training-Program.png"
 import Huawei3 from "../assets/portfolio/Huawei/CRA - Training-Program.png"
@@ -34,6 +38,7 @@ import Huawei6 from "../assets/portfolio/Huawei/Python-Programing-Basic.png"
 import Huawei7 from "../assets/portfolio/Huawei/Search-and-AI.png"
 import Huawei8 from "../assets/portfolio/Huawei/Search-and-AI(French).png"
 import Huawei9 from "../assets/portfolio/Huawei/HCIA-Security-V4.0-Course.png"
+import Huawei10 from "../assets/portfolio/Huawei/The Basics of NoSQL and NewSQL Big Data Management Mechanism.png"
 import POMN from "../assets/portfolio/POMN/POMN1.png"
 import Udemy1 from "../assets/portfolio/Udemy/Full PHP CRASH Course.jpg"
 import Udemy2 from "../assets/portfolio/Udemy/Full Stack Web Development Bootcamp.jpg"
@@ -71,6 +76,10 @@ export {
   Vscode,
   Dicoding1,
   Dicoding2,
+  Dicoding3,
+  Dicoding4,
+  Dicoding5,
+  Dicoding6,
   Huawei1,
   Huawei2,
   Huawei3,
@@ -80,6 +89,7 @@ export {
   Huawei7,
   Huawei8,
   Huawei9,
+  Huawei10,
   POMN,
   Udemy1,
   Udemy2,
