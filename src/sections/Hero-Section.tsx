@@ -31,7 +31,7 @@ const HeroSection = () => {
             <span className="text-blue-600">Ilham Hatta Manggala</span>
           </h1>
           <p className="mt-4 text-gray-700 dark:text-gray-300 text-lg">
-            Seorang mahasiswa yang berfokus pada{" "}
+            Seorang yang berfokus pada{" "}
             <span className="text-blue-600 font-semibold">
               <Typewriter
                 words={["Frontend Developer", "Flutter Developer"]}
