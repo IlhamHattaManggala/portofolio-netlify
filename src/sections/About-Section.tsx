@@ -18,7 +18,7 @@ const AboutSection = () => {
             Tentang Saya
           </h2>
           <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-10">
-            Saya adalah seorang mahasiswa yang berfokus pada pengembangan website
+            Saya adalah seorang yang berfokus pada pengembangan website
             serta aplikasi mobile. Saya memiliki ketertarikan besar terhadap teknologi web dan
             mobile, khususnya dalam pengembangan menggunakan{" "}
             <strong>Flask</strong>, <strong>Laravel</strong>,{" "}
