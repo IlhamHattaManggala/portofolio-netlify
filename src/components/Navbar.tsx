@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { fetchSettings } from "../services/api";
+import { usePolling } from "../hooks/usePolling";
 import myLogo from "../assets/my-profile.png";
 import "../App.css";
 
@@ -42,29 +43,37 @@ const Navbar = () => {
     setIsMobileOpen(false);
   };
 
-  useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const settings = await fetchSettings();
-        
-        if (settings.logo) {
-          setLogo(settings.logo);
-        }
-        
-        if (settings.site_name) {
-          setSiteName(settings.site_name);
-        }
-        
-        if (settings.resume_pdf) {
-          setResumeUrl(settings.resume_pdf);
-        }
-      } catch (error) {
-        console.warn('Failed to load navbar settings, using defaults:', error);
+  const loadSettings = async () => {
+    try {
+      const settings = await fetchSettings();
+      
+      if (settings.logo) {
+        setLogo(settings.logo);
       }
-    };
+      
+      if (settings.site_name) {
+        setSiteName(settings.site_name);
+      }
+      
+      if (settings.resume_pdf) {
+        setResumeUrl(settings.resume_pdf);
+      }
+    } catch (error) {
+      console.warn('Failed to load navbar settings, using defaults:', error);
+    }
+  };
 
+  useEffect(() => {
     loadSettings();
   }, []);
+
+  // Setup polling untuk settings dengan interval lebih lama (30 detik)
+  // karena settings jarang berubah
+  usePolling({
+    enabled: true,
+    interval: 30000, // 30 detik
+    onPoll: loadSettings,
+  });
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-gray-900 border-b border-gray-200 shadow-sm z-50">

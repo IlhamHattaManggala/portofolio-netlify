@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { fetchSettings } from "../services/api";
+import { usePolling } from "../hooks/usePolling";
 
 const Footer = () => {
   const [siteName, setSiteName] = useState("Ilham Hatta Manggala");
@@ -9,35 +10,43 @@ const Footer = () => {
   const [linkedinName, setLinkedinName] = useState("Ilham Hatta Manggala");
   const [footerDescription, setFooterDescription] = useState("Web & Flutter Developer yang berfokus pada solusi digital modern, antarmuka yang bersih, dan performa yang optimal.");
 
-  useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const settings = await fetchSettings();
-        
-        if (settings.site_name) {
-          setSiteName(settings.site_name);
-        }
-        
-        if (settings.email) {
-          setEmail(settings.email);
-        }
-        
-        if (settings.linkedin_url) {
-          setLinkedinUrl(settings.linkedin_url);
-          // Extract name from LinkedIn URL or use site_name
-          setLinkedinName(settings.site_name || "Ilham Hatta Manggala");
-        }
-        
-        if (settings.footer_description) {
-          setFooterDescription(settings.footer_description);
-        }
-      } catch (error) {
-        console.warn('Failed to load footer settings, using defaults:', error);
+  const loadSettings = async () => {
+    try {
+      const settings = await fetchSettings();
+      
+      if (settings.site_name) {
+        setSiteName(settings.site_name);
       }
-    };
+      
+      if (settings.email) {
+        setEmail(settings.email);
+      }
+      
+      if (settings.linkedin_url) {
+        setLinkedinUrl(settings.linkedin_url);
+        // Extract name from LinkedIn URL or use site_name
+        setLinkedinName(settings.site_name || "Ilham Hatta Manggala");
+      }
+      
+      if (settings.footer_description) {
+        setFooterDescription(settings.footer_description);
+      }
+    } catch (error) {
+      console.warn('Failed to load footer settings, using defaults:', error);
+    }
+  };
 
+  useEffect(() => {
     loadSettings();
   }, []);
+
+  // Setup polling untuk settings dengan interval lebih lama (30 detik)
+  // karena settings jarang berubah
+  usePolling({
+    enabled: true,
+    interval: 30000, // 30 detik
+    onPoll: loadSettings,
+  });
 
   return (
     <footer className="bg-gray-900 text-white py-10">

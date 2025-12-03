@@ -68,13 +68,13 @@ const ArticleDetail = () => {
         <DynamicHead />
         <Navbar />
         <main className="min-h-screen dark:bg-gray-900 py-16 px-6">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-6xl mx-auto text-center">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               {error || "Artikel tidak ditemukan"}
             </h1>
             <button
               onClick={() => navigate("/blog")}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Kembali ke Blog
             </button>
@@ -103,7 +103,7 @@ const ArticleDetail = () => {
             {/* Back Button */}
             <button
               onClick={() => navigate("/blog")}
-              className="mb-6 flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              className="mt-8 mb-6 flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />

@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { fetchTestimonials, submitTestimonial } from "../services/api";
+import { usePolling } from "../hooks/usePolling";
+import { POLLING_INTERVAL, POLLING_ENABLED } from "../config/api";
 
 interface Testimonial {
   id: number;
@@ -33,10 +35,6 @@ const TestimonialsSection = () => {
     image: null as File | null,
   });
 
-  useEffect(() => {
-    loadTestimonials();
-  }, []);
-
   const loadTestimonials = async () => {
     try {
       const data = await fetchTestimonials();
@@ -48,6 +46,17 @@ const TestimonialsSection = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadTestimonials();
+  }, []);
+
+  // Setup polling untuk auto-refresh testimonials
+  usePolling({
+    enabled: POLLING_ENABLED,
+    interval: POLLING_INTERVAL,
+    onPoll: loadTestimonials,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

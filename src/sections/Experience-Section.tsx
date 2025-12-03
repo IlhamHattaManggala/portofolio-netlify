@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { fetchExperiences } from "../services/api";
+import { usePolling } from "../hooks/usePolling";
+import { POLLING_INTERVAL, POLLING_ENABLED } from "../config/api";
 
 interface Experience {
   id: number;
@@ -17,21 +19,32 @@ const ExperienceSection = () => {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const loadExperiences = async () => {
-      try {
-        const data = await fetchExperiences();
-        setExperiences(data);
-      } catch (error) {
-        console.warn('Failed to load experiences, using empty array:', error);
-        setExperiences([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loadExperiences = async () => {
+    if (loading && experiences.length === 0) {
+      setLoading(true);
+    }
+    
+    try {
+      const data = await fetchExperiences();
+      setExperiences(data);
+    } catch (error) {
+      console.warn('Failed to load experiences, using empty array:', error);
+      setExperiences([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadExperiences();
   }, []);
+
+  // Setup polling untuk auto-refresh experiences
+  usePolling({
+    enabled: POLLING_ENABLED,
+    interval: POLLING_INTERVAL,
+    onPoll: loadExperiences,
+  });
 
   if (loading) {
     return (

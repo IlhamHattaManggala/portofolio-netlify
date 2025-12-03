@@ -9,27 +9,40 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FloatingSocials from "../components/FloatingSocials";
 import DynamicHead from "../components/DynamicHead";
+import { usePolling } from "../hooks/usePolling";
+import { POLLING_INTERVAL, POLLING_ENABLED } from "../config/api";
 
 const BlogListPage = () => {
   const [articles, setArticles] = useState<TArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const loadArticles = async () => {
-      try {
-        const data = await fetchArticles();
-        setArticles(data);
-      } catch (error) {
-        console.warn('Failed to load articles, using empty array:', error);
-        setArticles([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loadArticles = async () => {
+    if (loading && articles.length === 0) {
+      setLoading(true);
+    }
+    
+    try {
+      const data = await fetchArticles();
+      setArticles(data);
+    } catch (error) {
+      console.warn('Failed to load articles, using empty array:', error);
+      setArticles([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadArticles();
   }, []);
+
+  // Setup polling untuk auto-refresh articles
+  usePolling({
+    enabled: POLLING_ENABLED,
+    interval: POLLING_INTERVAL,
+    onPoll: loadArticles,
+  });
 
   const handleArticleClick = (article: TArticle) => {
     // Navigate to article detail page

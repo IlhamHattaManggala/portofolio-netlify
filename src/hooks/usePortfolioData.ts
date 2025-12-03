@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { fetchProjects, fetchTechnologies, fetchCertificates } from '../services/api';
 import { projects as staticProjects, technologies as staticTechnologies, sertifikat as staticCertificates } from '../components/constant';
 import type { TProject, TTechnology, TSertifikat } from '../components/types';
+import { usePolling } from './usePolling';
+import { POLLING_INTERVAL, POLLING_ENABLED } from '../config/api';
 
 interface UsePortfolioDataReturn {
   projects: TProject[];
@@ -19,43 +21,63 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isUsingFallback, setIsUsingFallback] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  useEffect(() => {
-    const loadData = async () => {
+  const loadData = async () => {
+    // Hanya set loading pada initial load
+    if (isInitialLoad) {
       setLoading(true);
-      setError(null);
-      setIsUsingFallback(false);
+      setIsInitialLoad(false);
+    }
+    
+    setError(null);
+    setIsUsingFallback(false);
 
-      try {
-        // Try to fetch from API
-        const [apiProjects, apiTechnologies, apiCertificates] = await Promise.all([
-          fetchProjects(),
-          fetchTechnologies(),
-          fetchCertificates(),
-        ]);
+    try {
+      // Try to fetch from API
+      const [apiProjects, apiTechnologies, apiCertificates] = await Promise.all([
+        fetchProjects(),
+        fetchTechnologies(),
+        fetchCertificates(),
+      ]);
 
-        // If API data is available, use it
-        if (apiProjects.length > 0) {
-          setProjects(apiProjects);
-        }
-        if (apiTechnologies.length > 0) {
-          setTechnologies(apiTechnologies);
-        }
-        if (apiCertificates.length > 0) {
-          setCertificates(apiCertificates);
-        }
-      } catch (err) {
-        // If API fails, use static data (already set as default)
-        console.warn('Using fallback static data:', err);
-        setIsUsingFallback(true);
-        setError('API tidak tersedia, menggunakan data statik');
-      } finally {
-        setLoading(false);
+      // Always update state with API data (even if empty)
+      // This ensures changes in backend are reflected in frontend
+      setProjects(apiProjects);
+      setTechnologies(apiTechnologies);
+      setCertificates(apiCertificates);
+      
+      // Log untuk debugging (bisa dihapus di production)
+      if (import.meta.env.DEV) {
+        console.log('Data updated:', {
+          projects: apiProjects.length,
+          technologies: apiTechnologies.length,
+          certificates: apiCertificates.length,
+        });
       }
-    };
+    } catch (err) {
+      // If API fails, use static data (already set as default)
+      console.warn('Using fallback static data:', err);
+      setIsUsingFallback(true);
+      setError('API tidak tersedia, menggunakan data statik');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Initial load
+  useEffect(() => {
     loadData();
   }, []);
+
+  // Setup polling untuk auto-refresh
+  // Polling akan selalu berjalan jika enabled, tidak peduli isUsingFallback
+  // karena mungkin API akan kembali tersedia
+  usePolling({
+    enabled: POLLING_ENABLED,
+    interval: POLLING_INTERVAL,
+    onPoll: loadData,
+  });
 
   return {
     projects,

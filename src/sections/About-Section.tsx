@@ -25,6 +25,13 @@ const AboutSection = () => {
     loadAboutDescription();
   }, []);
 
+  // Debug: Log ketika technologies berubah
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      console.log('Technologies updated in AboutSection:', technologies.length, technologies);
+    }
+  }, [technologies]);
+
   if (loading) {
     return (
       <section className="dark:bg-gray-900 py-10 pt-10 min-h-screen my-10" id="about">
@@ -63,7 +70,7 @@ const AboutSection = () => {
         <div className="w-full flex flex-row flex-wrap justify-center gap-6 md:gap-8" id="skill">
           {technologies.map((technology, index) => (
             <TechnologyCard
-              key={technology.name + index}
+              key={`${technology.name}-${index}-${technology.icon || ''}`}
               name={technology.name}
               icon={technology.icon || null}
               index={index}

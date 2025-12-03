@@ -12,7 +12,7 @@ import Kontak from "./sections/Contact-Section";
 import ExperienceSection from "./sections/Experience-Section";
 import TestimonialsSection from "./sections/Testimonials-Section";
 import DynamicHead from "./components/DynamicHead";
-// import CallToAction from "./sections/CallToAction";
+import CallToAction from "./sections/CallToAction";
 // import { BrowserRouter } from "react-router-dom";
 function App() {
   const location = useLocation();
@@ -39,7 +39,7 @@ function App() {
           <AboutSection />
           <ExperienceSection />
           <ProjectSection />
-          {/* <CallToAction /> */}
+          <CallToAction />
           <GallerySertifikat />
           <TestimonialsSection />
           <Kontak />{" "}
