@@ -1,8 +1,40 @@
 import { motion } from "framer-motion";
-import { BallCanvas } from "../components/canvas";
-import { technologies } from "../components/constant";
+import { useState, useEffect } from "react";
+import TechnologyCard from "../components/TechnologyCard";
+import { usePortfolioData } from "../hooks/usePortfolioData";
+import { fetchSettings } from "../services/api";
 
 const AboutSection = () => {
+  const { technologies, loading } = usePortfolioData();
+  const [aboutDescription, setAboutDescription] = useState(
+    "Saya adalah seorang yang berfokus pada pengembangan website serta aplikasi mobile. Saya memiliki ketertarikan besar terhadap teknologi web dan mobile, khususnya dalam pengembangan menggunakan Flask, Laravel, React, Flutter, Bootstrap, dan Tailwind CSS."
+  );
+
+  useEffect(() => {
+    const loadAboutDescription = async () => {
+      try {
+        const settings = await fetchSettings();
+        if (settings.about_description) {
+          setAboutDescription(settings.about_description);
+        }
+      } catch (error) {
+        console.warn('Failed to load about description, using default:', error);
+      }
+    };
+
+    loadAboutDescription();
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="dark:bg-gray-900 py-10 pt-10 min-h-screen my-10" id="about">
+        <div className="max-w-6xl mx-auto px-6 lg:px-8 flex flex-col justify-center items-center min-h-screen">
+          <p className="text-gray-600 dark:text-gray-400">Memuat data...</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="dark:bg-gray-900 py-10 pt-10 min-h-screen my-10" id="about">
       <div className="max-w-6xl mx-auto px-6 lg:px-8 flex flex-col justify-center items-center min-h-screen">
@@ -18,28 +50,24 @@ const AboutSection = () => {
             Tentang Saya
           </h2>
           <p className="text-gray-700 dark:text-gray-300 text-lg leading-relaxed mb-10">
-            Saya adalah seorang yang berfokus pada pengembangan website
-            serta aplikasi mobile. Saya memiliki ketertarikan besar terhadap teknologi web dan
-            mobile, khususnya dalam pengembangan menggunakan{" "}
-            <strong>Flask</strong>, <strong>Laravel</strong>,{" "}
-            <strong>React</strong>, <strong>Flutter</strong>,{" "}
-            <strong>Bootstrap</strong>, dan <strong>Tailwind CSS</strong>.
+            {aboutDescription.split(/(\*\*.*?\*\*)/).map((part, index) => {
+              if (part.startsWith('**') && part.endsWith('**')) {
+                return <strong key={index}>{part.slice(2, -2)}</strong>;
+              }
+              return <span key={index}>{part}</span>;
+            })}
           </p>
         </motion.div>
 
         {/* Skills / Tech Section */}
-        <div className="w-full flex flex-row flex-wrap justify-center gap-10" id="skill">
+        <div className="w-full flex flex-row flex-wrap justify-center gap-6 md:gap-8" id="skill">
           {technologies.map((technology, index) => (
-            <motion.div
+            <TechnologyCard
               key={technology.name + index}
-              className="h-28 w-28"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true, amount: 0.2 }}
-            >
-              <BallCanvas icon={technology.icon} />
-            </motion.div>
+              name={technology.name}
+              icon={technology.icon || null}
+              index={index}
+            />
           ))}
         </div>
       </div>

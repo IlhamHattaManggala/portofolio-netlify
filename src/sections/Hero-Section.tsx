@@ -1,9 +1,46 @@
 import { Typewriter } from "react-simple-typewriter";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { fetchSettings } from "../services/api";
 import mobileImg from "../assets/my-profile.png"; // gambar untuk layar kecil
 import "../components/css/hero.css";
 
 const HeroSection = () => {
+  const [heroName, setHeroName] = useState("Ilham Hatta Manggala");
+  const [professions, setProfessions] = useState<string[]>(["Frontend Developer", "Flutter Developer"]);
+  const [heroImage, setHeroImage] = useState(mobileImg);
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const settings = await fetchSettings();
+        
+        if (settings.site_name) {
+          setHeroName(settings.site_name);
+        }
+        
+        if (settings.hero_professions) {
+          try {
+            const parsed = JSON.parse(settings.hero_professions);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setProfessions(parsed);
+            }
+          } catch (e) {
+            console.warn('Failed to parse hero_professions:', e);
+          }
+        }
+
+        if (settings.hero_image) {
+          setHeroImage(settings.hero_image);
+        }
+      } catch (error) {
+        console.warn('Failed to load hero settings, using defaults:', error);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
   return (
     <section
       className="dark:bg-gray-900 min-h-screen pt-10 relative overflow-hidden"
@@ -12,11 +49,12 @@ const HeroSection = () => {
       <div className="max-w-4xl mx-auto px-6 flex flex-col items-center justify-center min-h-screen relative z-10 text-center">
         {/* Gambar mengambang */}
         <motion.img
-          src={mobileImg}
+          src={heroImage}
           alt="Profile Floating"
           className="w-52 sm:w-64 lg:w-72 absolute top-10 mx-auto left-0 right-0 opacity-90 pointer-events-none"
           animate={{ y: [0, -20, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          onError={() => setHeroImage(mobileImg)}
         />
 
         {/* Konten teks */}
@@ -28,13 +66,13 @@ const HeroSection = () => {
         >
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight">
             Halo, Saya{" "}
-            <span className="text-blue-600">Ilham Hatta Manggala</span>
+            <span className="text-blue-600">{heroName}</span>
           </h1>
           <p className="mt-4 text-gray-700 dark:text-gray-300 text-lg">
             Seorang yang berfokus pada{" "}
             <span className="text-blue-600 font-semibold">
               <Typewriter
-                words={["Frontend Developer", "Flutter Developer"]}
+                words={professions}
                 loop={0}
                 cursor
                 cursorStyle="|"

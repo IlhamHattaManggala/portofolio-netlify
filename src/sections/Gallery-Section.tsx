@@ -1,19 +1,35 @@
-import { useState, useEffect, useRef } from "react";
-import { sertifikat } from "../components/constant";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { usePortfolioData } from "../hooks/usePortfolioData";
 
 const GallerySertifikat = () => {
+  const { certificates, loading } = usePortfolioData();
   const itemsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
-  const [visibleItems, setVisibleItems] = useState(
-    sertifikat.slice(0, itemsPerPage)
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
 
   const [modalImage, setModalImage] = useState<string | null>(null);
 
-  const totalPages = Math.ceil(sertifikat.length / itemsPerPage);
+  // Get unique categories
+  const categories = useMemo(() => {
+    const cats = certificates
+      .map((cert) => cert.category)
+      .filter((cat): cat is string => Boolean(cat));
+    return Array.from(new Set(cats)).sort();
+  }, [certificates]);
+
+  // Filter certificates by category
+  const filteredCertificates = useMemo(() => {
+    if (!selectedCategory) return certificates;
+    return certificates.filter((cert) => cert.category === selectedCategory);
+  }, [certificates, selectedCategory]);
+
+  const totalPages = Math.ceil(filteredCertificates.length / itemsPerPage);
+  const [visibleItems, setVisibleItems] = useState(
+    filteredCertificates.slice(0, itemsPerPage)
+  );
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -35,11 +51,16 @@ const GallerySertifikat = () => {
     setIsAnimating(true);
     const timer = setTimeout(() => {
       const startIndex = (currentPage - 1) * itemsPerPage;
-      setVisibleItems(sertifikat.slice(startIndex, startIndex + itemsPerPage));
+      setVisibleItems(filteredCertificates.slice(startIndex, startIndex + itemsPerPage));
       setIsAnimating(false);
     }, 300);
     return () => clearTimeout(timer);
-  }, [currentPage]);
+  }, [currentPage, filteredCertificates, itemsPerPage]);
+
+  // Reset to page 1 when category changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory]);
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -57,16 +78,50 @@ const GallerySertifikat = () => {
       `}
     >
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-10 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6 text-center">
           Gallery Sertifikat
         </h2>
+        {loading && (
+          <p className="text-gray-600 dark:text-gray-400 mb-4 text-center">
+            Memuat data...
+          </p>
+        )}
+
+        {/* Category Filter */}
+        {categories.length > 0 && (
+          <div className="mb-8 flex flex-wrap justify-center gap-3">
+            <button
+              onClick={() => setSelectedCategory(null)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                selectedCategory === null
+                  ? "bg-blue-600 text-white shadow-md"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+              }`}
+            >
+              All
+            </button>
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  selectedCategory === category
+                    ? "bg-blue-600 text-white shadow-md"
+                    : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+        )}
 
         <div
           className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 transition-opacity duration-500 ${
             isAnimating ? "opacity-0" : "opacity-100"
           }`}
         >
-          {visibleItems.map(({ id, title, platform, image }, index) => (
+          {visibleItems.map(({ id, title, category, image }, index) => (
             <div
               key={id}
               className={`break-inside-avoid bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-xl cursor-pointer
@@ -94,12 +149,14 @@ const GallerySertifikat = () => {
               />
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="text-md font-semibold text-gray-900 dark:text-white">
+                  <h3 className="text-md font-semibold text-gray-900 dark:text-white mb-2">
                     {title}
                   </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {platform}
-                  </p>
+                  {category && (
+                    <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
+                      {category}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

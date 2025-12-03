@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { projects } from "../components/constant";
+import { usePortfolioData } from "../hooks/usePortfolioData";
 import { motion } from "framer-motion";
 import "../App.css";
 
 const ProjectSection = () => {
+  const { projects, loading } = usePortfolioData();
   const itemsPerPage = 3; // jumlah project per halaman
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -22,6 +23,21 @@ const ProjectSection = () => {
       setCurrentPage(page);
     }
   };
+
+  if (loading) {
+    return (
+      <section className="dark:bg-gray-900 py-10 pt-20 my-10" id="project">
+        <div className="max-w-6xl mx-auto px-6 lg:px-8">
+          <div className="w-full text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-12">
+              Project Saya
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">Memuat data...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="dark:bg-gray-900 py-10 pt-20 my-10" id="project">

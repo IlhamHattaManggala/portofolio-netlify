@@ -1,9 +1,70 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { fetchSettings } from "../services/api";
 import myLogo from "../assets/my-profile.png";
 import "../App.css";
 
 const Navbar = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [logo, setLogo] = useState(myLogo);
+  const [siteName, setSiteName] = useState("Ilham Hatta Manggala");
+  const [resumeUrl, setResumeUrl] = useState("/CV - ILHAM HATTA MANGGALA.pdf");
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Check if we're on the homepage
+  const isHomePage = location.pathname === "/";
+  
+  // Handle navigation for hash links
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, hash: string) => {
+    e.preventDefault();
+    
+    if (isHomePage) {
+      // If on homepage, just scroll to the section
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // If not on homepage, navigate to homepage first
+      navigate('/');
+      // After navigation, set hash and scroll to the section
+      setTimeout(() => {
+        window.location.hash = hash;
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+    
+    // Close mobile menu if open
+    setIsMobileOpen(false);
+  };
+
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const settings = await fetchSettings();
+        
+        if (settings.logo) {
+          setLogo(settings.logo);
+        }
+        
+        if (settings.site_name) {
+          setSiteName(settings.site_name);
+        }
+        
+        if (settings.resume_pdf) {
+          setResumeUrl(settings.resume_pdf);
+        }
+      } catch (error) {
+        console.warn('Failed to load navbar settings, using defaults:', error);
+      }
+    };
+
+    loadSettings();
+  }, []);
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-gray-900 border-b border-gray-200 shadow-sm z-50">
@@ -11,49 +72,80 @@ const Navbar = () => {
         <div className="flex justify-between h-16 items-center">
           {/* Logo */}
           <div className="flex items-center space-x-2">
-            <img src={myLogo} alt="Logo" className="h-8 w-8" />
+            <img 
+              src={logo} 
+              alt="Logo" 
+              className="h-8 w-8" 
+              onError={() => setLogo(myLogo)}
+            />
             <a href="/" className="text-xl font-bold">
-              Ilham Hatta Manggala
+              {siteName}
             </a>
           </div>
 
           {/* Desktop Menu */}
-          <div className="nav-box hidden md:flex items-center">
+          <div className="nav-box hidden md:flex items-center gap-1">
             <a
               href="#hero"
-              className="text-neutral-800 dark:text-white my-1 px-5 py-2 rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
+              onClick={(e) => handleNavClick(e, "#hero")}
+              className="text-neutral-800 dark:text-white my-1 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
             >
               <span>Beranda</span>
             </a>
             <a
               href="#about"
-              className="text-neutral-800 dark:text-white my-1 px-5 py-2 rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
+              onClick={(e) => handleNavClick(e, "#about")}
+              className="text-neutral-800 dark:text-white my-1 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
             >
               <span>Tentang</span>
             </a>
             <a
+              href="#experience"
+              onClick={(e) => handleNavClick(e, "#experience")}
+              className="text-neutral-800 dark:text-white my-1 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
+            >
+              <span>Pengalaman</span>
+            </a>
+            <a
               href="#project"
-              className="text-neutral-800 dark:text-white my-1 px-5 py-2 rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
+              onClick={(e) => handleNavClick(e, "#project")}
+              className="text-neutral-800 dark:text-white my-1 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
             >
               <span>Project</span>
             </a>
             <a
               href="#sertifikasi"
-              className="text-neutral-800 dark:text-white my-1 px-5 py-2 rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
+              onClick={(e) => handleNavClick(e, "#sertifikasi")}
+              className="text-neutral-800 dark:text-white my-1 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
             >
               <span>Sertifikasi</span>
             </a>
             <a
+              href="#testimonials"
+              onClick={(e) => handleNavClick(e, "#testimonials")}
+              className="text-neutral-800 dark:text-white my-1 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
+            >
+              <span>Testimoni</span>
+            </a>
+            <a
+              href="/blog"
+              className="text-neutral-800 dark:text-white my-1 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
+            >
+              <span>Blog</span>
+            </a>
+            <a
               href="#contact"
-              className="text-neutral-800 dark:text-white my-1 px-5 py-2 rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
+              onClick={(e) => handleNavClick(e, "#contact")}
+              className="text-neutral-800 dark:text-white my-1 px-3 py-1.5 text-sm rounded-lg transition-all duration-200 hover:bg-gray-800 hover:text-white"
             >
               <span>Kontak</span>
             </a>
-            <div className="hidden md:flex">
+            <div className="hidden md:flex ml-2">
               <a
-                href="/CV - ILHAM HATTA MANGGALA.pdf"
-                download
-                className="ml-4 px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-all duration-200"
+                href={resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3 py-1.5 text-sm rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition-all duration-200"
               >
                 Download Resume
               </a>
@@ -90,46 +182,68 @@ const Navbar = () => {
 
         {/* Mobile Floating Menu */}
         {isMobileOpen && (
-          <div className="absolute top-18 left-2 right-2 md:hidden bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-lg shadow-lg py-4 px-6 space-y-3 z-50">
+          <div className="absolute top-18 left-2 right-2 md:hidden bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-lg shadow-lg py-4 px-6 space-y-2 z-50">
             <a
-              href="#home"
-              className="block text-neutral-800 dark:text-white"
-              onClick={() => setIsMobileOpen(false)}
+              href="#hero"
+              className="block text-neutral-800 dark:text-white text-sm py-1.5"
+              onClick={(e) => handleNavClick(e, "#hero")}
             >
               Beranda
             </a>
             <a
               href="#about"
-              className="block text-neutral-800 dark:text-white"
-              onClick={() => setIsMobileOpen(false)}
+              className="block text-neutral-800 dark:text-white text-sm py-1.5"
+              onClick={(e) => handleNavClick(e, "#about")}
             >
               Tentang
             </a>
             <a
+              href="#experience"
+              className="block text-neutral-800 dark:text-white text-sm py-1.5"
+              onClick={(e) => handleNavClick(e, "#experience")}
+            >
+              Pengalaman
+            </a>
+            <a
               href="#project"
-              className="block text-neutral-800 dark:text-white"
-              onClick={() => setIsMobileOpen(false)}
+              className="block text-neutral-800 dark:text-white text-sm py-1.5"
+              onClick={(e) => handleNavClick(e, "#project")}
             >
               Project
             </a>
             <a
               href="#sertifikasi"
-              className="block text-neutral-800 dark:text-white"
-              onClick={() => setIsMobileOpen(false)}
+              className="block text-neutral-800 dark:text-white text-sm py-1.5"
+              onClick={(e) => handleNavClick(e, "#sertifikasi")}
             >
               Sertifikasi
             </a>
             <a
-              href="#contact"
-              className="block text-neutral-800 dark:text-white"
+              href="#testimonials"
+              className="block text-neutral-800 dark:text-white text-sm py-1.5"
+              onClick={(e) => handleNavClick(e, "#testimonials")}
+            >
+              Testimoni
+            </a>
+            <a
+              href="/blog"
+              className="block text-neutral-800 dark:text-white text-sm py-1.5"
               onClick={() => setIsMobileOpen(false)}
+            >
+              Blog
+            </a>
+            <a
+              href="#contact"
+              className="block text-neutral-800 dark:text-white text-sm py-1.5"
+              onClick={(e) => handleNavClick(e, "#contact")}
             >
               Kontak
             </a>
             <a
-              href="/resume-ilham.pdf"
-              download
-              className="block text-center bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-200"
+              href={resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-center bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-200 text-sm mt-2"
               onClick={() => setIsMobileOpen(false)}
             >
               Download Resume

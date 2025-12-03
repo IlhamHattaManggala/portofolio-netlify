@@ -29,9 +29,27 @@ export type TSertifikat = {
   id: number;
   title: string;
   platform: string;
+  category?: string | null;
   image?: string;
 };
 export type TTemplates = {
   id: number;
   content?: string;
+};
+
+export type TArticle = {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  featured_image?: string;
+  meta_title?: string;
+  meta_description?: string;
+  meta_keywords?: string;
+  is_published: boolean;
+  published_at?: string;
+  views: number;
+  created_at?: string;
+  updated_at?: string;
 };

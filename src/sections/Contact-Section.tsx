@@ -1,19 +1,50 @@
 import React, { useState } from "react";
 import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
+import { API_BASE_URL } from "../config/api";
 
 const ContactSection: React.FC = () => {
   // State untuk feedback kirim pesan
   const [success, setSuccess] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const form = e.currentTarget;
+    const formData = new FormData(form);
+    const name = formData.get('user_name') as string;
+    const email = formData.get('user_email') as string;
+    const message = formData.get('message') as string;
 
     setLoading(true);
+    setSuccess(null);
 
+    // Try API first, fallback to EmailJS
+    try {
+      const response = await fetch(`${API_BASE_URL}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+        }),
+      });
+
+      if (response.ok) {
+        setSuccess(true);
+        form.reset();
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      console.warn('API tidak tersedia, menggunakan EmailJS:', error);
+    }
+
+    // Fallback to EmailJS
     emailjs
       .sendForm(
         "porto_ilham31", // Service ID
