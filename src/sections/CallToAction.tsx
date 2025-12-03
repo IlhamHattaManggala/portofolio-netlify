@@ -25,15 +25,23 @@ const CallToAction = () => {
       const settings = await fetchSettings();
       
       // Check if CTA is enabled (handle string 'true' or '1')
+      // Only update ctaEnabled if the setting actually exists in the API response
       const ctaEnabledValue = settings.cta_enabled;
-      const isEnabled = ctaEnabledValue === 'true' || ctaEnabledValue === '1';
-      if (isEnabled) {
-        setCtaEnabled(true);
-      } else {
-        setCtaEnabled(false);
-        return; // Don't load other settings if disabled
-      }
       
+      // If cta_enabled exists in settings, update the state
+      if (ctaEnabledValue !== undefined && ctaEnabledValue !== null) {
+        const isEnabled = ctaEnabledValue === 'true' || ctaEnabledValue === '1';
+        setCtaEnabled(isEnabled);
+        
+        // If disabled, don't load other settings
+        if (!isEnabled) {
+          return;
+        }
+      }
+      // If cta_enabled doesn't exist, keep the current state (don't change it)
+      // This prevents CTA from disappearing when API returns empty object or missing field
+      
+      // Update other settings if they exist
       if (settings.cta_title) {
         setCtaTitle(settings.cta_title);
       }
@@ -49,6 +57,7 @@ const CallToAction = () => {
     } catch (error) {
       console.warn('Failed to load CTA settings, using static fallback data:', error);
       // Use static fallback data if API fails
+      // Only update if we're in error state (not if settings just missing the field)
       setCtaEnabled(staticCTAData.enabled);
       setCtaTitle(staticCTAData.title);
       setCtaDescription(staticCTAData.description);
