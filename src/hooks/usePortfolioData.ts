@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { fetchProjects, fetchTechnologies, fetchCertificates } from '../services/api';
 import { projects as staticProjects, technologies as staticTechnologies, sertifikat as staticCertificates } from '../components/constant';
 import type { TProject, TTechnology, TSertifikat } from '../components/types';
@@ -23,7 +23,7 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
   const [isUsingFallback, setIsUsingFallback] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     // Hanya set loading pada initial load
     if (isInitialLoad) {
       setLoading(true);
@@ -41,18 +41,43 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
         fetchCertificates(),
       ]);
 
-      // Always update state with API data (even if empty)
-      // This ensures changes in backend are reflected in frontend
-      setProjects(apiProjects);
-      setTechnologies(apiTechnologies);
-      setCertificates(apiCertificates);
+      // Only update state with API data if arrays are not empty
+      // If API returns empty arrays, keep using static fallback data
+      let hasEmptyData = false;
+
+      if (apiProjects.length > 0) {
+        setProjects(apiProjects);
+      } else {
+        // API returned empty array, keep static data
+        hasEmptyData = true;
+      }
+
+      if (apiTechnologies.length > 0) {
+        setTechnologies(apiTechnologies);
+      } else {
+        // API returned empty array, keep static data
+        hasEmptyData = true;
+      }
+
+      if (apiCertificates.length > 0) {
+        setCertificates(apiCertificates);
+      } else {
+        // API returned empty array, keep static data
+        hasEmptyData = true;
+      }
+
+      // If any data is empty, use fallback
+      if (hasEmptyData) {
+        setIsUsingFallback(true);
+        setError('API tidak memiliki data, menggunakan data statik');
+      }
       
       // Log untuk debugging (bisa dihapus di production)
       if (import.meta.env.DEV) {
         console.log('Data updated:', {
-          projects: apiProjects.length,
-          technologies: apiTechnologies.length,
-          certificates: apiCertificates.length,
+          projects: apiProjects.length > 0 ? apiProjects.length : 'using static',
+          technologies: apiTechnologies.length > 0 ? apiTechnologies.length : 'using static',
+          certificates: apiCertificates.length > 0 ? apiCertificates.length : 'using static',
         });
       }
     } catch (err) {
@@ -63,12 +88,12 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [isInitialLoad]);
 
   // Initial load
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   // Setup polling untuk auto-refresh
   // Polling akan selalu berjalan jika enabled, tidak peduli isUsingFallback
