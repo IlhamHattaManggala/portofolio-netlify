@@ -4,6 +4,7 @@ import { fetchExperiences } from "../services/api";
 import { usePolling } from "../hooks/usePolling";
 import { POLLING_INTERVAL, POLLING_ENABLED } from "../config/api";
 import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
+import StarsBackground from "../components/StarsBackground";
 
 interface Experience {
   id: number;
@@ -62,8 +63,9 @@ const ExperienceSection = () => {
   }
 
   return (
-    <section className="dark:bg-gray-900 py-20 px-6 min-h-screen" id="experience">
-      <div className="max-w-5xl mx-auto">
+    <section className="dark:bg-gray-900 py-20 px-6 min-h-screen relative" id="experience">
+      <StarsBackground count={100} />
+      <div className="max-w-5xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { usePortfolioData } from "../hooks/usePortfolioData";
+import StarsBackground from "../components/StarsBackground";
 
 const GallerySertifikat = () => {
   const { certificates, loading } = usePortfolioData();
@@ -72,12 +73,13 @@ const GallerySertifikat = () => {
     <section
       ref={sectionRef}
       id="sertifikasi"
-      className={`dark:bg-gray-900 py-16 px-6 min-h-screen
+      className={`dark:bg-gray-900 py-16 px-6 min-h-screen relative
         transition-all duration-1000 ease-out
         ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}
       `}
     >
-      <div className="max-w-6xl mx-auto">
+      <StarsBackground count={100} />
+      <div className="max-w-6xl mx-auto relative z-10">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6 text-center">
           Gallery Sertifikat
         </h2>

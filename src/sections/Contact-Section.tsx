@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 import { API_BASE_URL } from "../config/api";
+import StarsBackground from "../components/StarsBackground";
 
 const ContactSection: React.FC = () => {
   // State untuk feedback kirim pesan
@@ -70,9 +71,10 @@ const ContactSection: React.FC = () => {
   return (
     <section
       id="contact"
-      className="py-16 px-6 min-h-screen bg-gray-100 dark:bg-gray-900"
+      className="py-16 px-6 min-h-screen bg-gray-100 dark:bg-gray-900 relative"
     >
-      <div className="max-w-4xl mx-auto">
+      <StarsBackground count={100} />
+      <div className="max-w-4xl mx-auto relative z-10">
         <motion.h2
           className="text-3xl md:text-4xl font-bold text-center mb-10 text-gray-900 dark:text-white"
           initial={{ opacity: 0, y: 30 }}

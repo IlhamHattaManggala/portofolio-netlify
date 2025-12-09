@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { fetchSettings } from "../services/api";
 import { usePolling } from "../hooks/usePolling";
 import { POLLING_ENABLED } from "../config/api";
+import StarsBackground from "../components/StarsBackground";
 
 // Static fallback data untuk CTA
 const staticCTAData = {
@@ -83,13 +84,14 @@ const CallToAction = () => {
 
   return (
     <motion.section
-      className="w-full py-16 bg-gradient-to-r from-blue-600 to-indigo-700 dark:from-blue-800 dark:to-indigo-900 flex justify-center items-center"
+      className="w-full py-16 bg-gradient-to-r from-blue-600 to-indigo-700 dark:from-blue-800 dark:to-indigo-900 flex justify-center items-center relative"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7 }}
       viewport={{ once: true, amount: 0.2 }}
     >
-      <div className="text-center text-white max-w-2xl px-4">
+      <StarsBackground count={80} />
+      <div className="text-center text-white max-w-2xl px-4 relative z-10">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
           {ctaTitle}
         </h2>

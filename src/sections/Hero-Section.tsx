@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { fetchSettings } from "../services/api";
 import mobileImg from "../assets/my-profile.png"; // gambar untuk layar kecil
+import StarsBackground from "../components/StarsBackground";
 import "../components/css/hero.css";
 
 const HeroSection = () => {
@@ -46,6 +47,7 @@ const HeroSection = () => {
       className="dark:bg-gray-900 min-h-screen pt-10 relative overflow-hidden"
       id="hero"
     >
+      <StarsBackground count={120} />
       <div className="max-w-4xl mx-auto px-6 flex flex-col items-center justify-center min-h-screen relative z-10 text-center">
         {/* Gambar mengambang */}
         <motion.img

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import TechnologyCard from "../components/TechnologyCard";
 import { usePortfolioData } from "../hooks/usePortfolioData";
 import { fetchSettings } from "../services/api";
+import StarsBackground from "../components/StarsBackground";
 
 const AboutSection = () => {
   const { technologies, loading } = usePortfolioData();
@@ -43,8 +44,9 @@ const AboutSection = () => {
   }
 
   return (
-    <section className="dark:bg-gray-900 py-10 pt-10 min-h-screen my-10" id="about">
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 flex flex-col justify-center items-center min-h-screen">
+    <section className="dark:bg-gray-900 py-10 pt-10 min-h-screen my-10 relative" id="about">
+      <StarsBackground count={100} />
+      <div className="max-w-6xl mx-auto px-6 lg:px-8 flex flex-col justify-center items-center min-h-screen relative z-10">
         {/* Text Content */}
         <motion.div
           className="w-full text-center"

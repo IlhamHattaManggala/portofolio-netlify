@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { fetchTestimonials, submitTestimonial } from "../services/api";
 import { usePolling } from "../hooks/usePolling";
 import { POLLING_INTERVAL, POLLING_ENABLED } from "../config/api";
+import StarsBackground from "../components/StarsBackground";
 
 interface Testimonial {
   id: number;
@@ -119,8 +120,9 @@ const TestimonialsSection = () => {
 
   if (loading) {
     return (
-      <section className="dark:bg-gray-900 py-16 px-6 min-h-screen" id="testimonials">
-        <div className="max-w-6xl mx-auto">
+      <section className="dark:bg-gray-900 py-16 px-6 min-h-screen relative" id="testimonials">
+        <StarsBackground count={100} />
+        <div className="max-w-6xl mx-auto relative z-10">
           <p className="text-gray-600 dark:text-gray-400 text-center">Memuat data...</p>
         </div>
       </section>
@@ -128,8 +130,9 @@ const TestimonialsSection = () => {
   }
 
   return (
-    <section className="dark:bg-gray-900 py-16 px-6 min-h-screen" id="testimonials">
-      <div className="max-w-6xl mx-auto">
+    <section className="dark:bg-gray-900 py-16 px-6 min-h-screen relative" id="testimonials">
+      <StarsBackground count={100} />
+      <div className="max-w-6xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
