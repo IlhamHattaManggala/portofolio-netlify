@@ -2,6 +2,7 @@ import { Typewriter } from "react-simple-typewriter";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { fetchSettings } from "../services/api";
+import { usePolling } from "../hooks/usePolling";
 import mobileImg from "../assets/my-profile.png"; // gambar untuk layar kecil
 import StarsBackground from "../components/StarsBackground";
 import "../components/css/hero.css";
@@ -11,36 +12,44 @@ const HeroSection = () => {
   const [professions, setProfessions] = useState<string[]>(["Frontend Developer", "Flutter Developer"]);
   const [heroImage, setHeroImage] = useState(mobileImg);
 
-  useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const settings = await fetchSettings();
-        
-        if (settings.site_name) {
-          setHeroName(settings.site_name);
-        }
-        
-        if (settings.hero_professions) {
-          try {
-            const parsed = JSON.parse(settings.hero_professions);
-            if (Array.isArray(parsed) && parsed.length > 0) {
-              setProfessions(parsed);
-            }
-          } catch (e) {
-            console.warn('Failed to parse hero_professions:', e);
-          }
-        }
-
-        if (settings.hero_image) {
-          setHeroImage(settings.hero_image);
-        }
-      } catch (error) {
-        console.warn('Failed to load hero settings, using defaults:', error);
+  const loadSettings = async () => {
+    try {
+      const settings = await fetchSettings();
+      
+      if (settings.site_name) {
+        setHeroName(settings.site_name);
       }
-    };
+      
+      if (settings.hero_professions) {
+        try {
+          const parsed = JSON.parse(settings.hero_professions);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setProfessions(parsed);
+          }
+        } catch (e) {
+          console.warn('Failed to parse hero_professions:', e);
+        }
+      }
 
+      if (settings.hero_image) {
+        setHeroImage(settings.hero_image);
+      }
+    } catch (error) {
+      console.warn('Failed to load hero settings, using defaults:', error);
+    }
+  };
+
+  useEffect(() => {
     loadSettings();
   }, []);
+
+  // Setup polling untuk settings dengan interval lebih lama (30 detik)
+  // karena settings jarang berubah
+  usePolling({
+    enabled: true,
+    interval: 30000, // 30 detik
+    onPoll: loadSettings,
+  });
 
   return (
     <section

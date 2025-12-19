@@ -47,7 +47,10 @@ const Navbar = () => {
     try {
       const settings = await fetchSettings();
       
-      if (settings.logo) {
+      // Use hero_image as logo (fallback to logo if hero_image not available)
+      if (settings.hero_image) {
+        setLogo(settings.hero_image);
+      } else if (settings.logo) {
         setLogo(settings.logo);
       }
       
