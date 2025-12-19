@@ -40,11 +40,11 @@ const Footer = () => {
     loadSettings();
   }, []);
 
-  // Setup polling untuk settings dengan interval lebih lama (30 detik)
+  // Setup polling untuk settings dengan interval lebih lama (2 jam)
   // karena settings jarang berubah
   usePolling({
     enabled: true,
-    interval: 30000, // 30 detik
+    interval: 7200000, // 2 jam (2 * 60 * 60 * 1000 ms)
     onPoll: loadSettings,
   });
 

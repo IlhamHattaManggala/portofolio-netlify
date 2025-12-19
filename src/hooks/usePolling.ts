@@ -15,7 +15,7 @@ interface UsePollingOptions {
  */
 export const usePolling = ({ 
   enabled = true, 
-  interval = 10000, 
+  interval = 30000, 
   onPoll 
 }: UsePollingOptions) => {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);

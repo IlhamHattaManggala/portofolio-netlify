@@ -4,7 +4,7 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://ilhamh
 export const API_TIMEOUT = 30000; // 30 seconds timeout (increased for development)
 
 // Polling Configuration
-export const POLLING_INTERVAL = parseInt(import.meta.env.VITE_POLLING_INTERVAL || '5000', 10); // Default: 5 seconds (lebih cepat untuk testing)
+export const POLLING_INTERVAL = parseInt(import.meta.env.VITE_POLLING_INTERVAL || '7200000', 10); // Default: 2 jam (2 * 60 * 60 * 1000 ms)
 export const POLLING_ENABLED = import.meta.env.VITE_POLLING_ENABLED !== 'false'; // Default: true
 
 // Helper to check if API is available

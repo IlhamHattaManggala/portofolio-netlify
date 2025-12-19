@@ -74,7 +74,7 @@ const CallToAction = () => {
   // Setup polling untuk auto-refresh CTA settings
   usePolling({
     enabled: POLLING_ENABLED,
-    interval: 30000, // 30 detik (sama seperti settings lainnya)
+    interval: 7200000, // 2 jam (2 * 60 * 60 * 1000 ms)
     onPoll: loadCTASettings,
   });
 
