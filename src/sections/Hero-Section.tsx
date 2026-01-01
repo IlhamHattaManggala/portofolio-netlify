@@ -1,55 +1,15 @@
 import { Typewriter } from "react-simple-typewriter";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { fetchSettings } from "../services/api";
-import { usePolling } from "../hooks/usePolling";
+import { useState } from "react";
+import { settings } from "../data/settings";
 import mobileImg from "../assets/my-profile.png"; // gambar untuk layar kecil
 import StarsBackground from "../components/StarsBackground";
 import "../components/css/hero.css";
 
 const HeroSection = () => {
-  const [heroName, setHeroName] = useState("Ilham Hatta Manggala");
-  const [professions, setProfessions] = useState<string[]>(["Frontend Developer", "Flutter Developer"]);
-  const [heroImage, setHeroImage] = useState(mobileImg);
-
-  const loadSettings = async () => {
-    try {
-      const settings = await fetchSettings();
-      
-      if (settings.site_name) {
-        setHeroName(settings.site_name);
-      }
-      
-      if (settings.hero_professions) {
-        try {
-          const parsed = JSON.parse(settings.hero_professions);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setProfessions(parsed);
-          }
-        } catch (e) {
-          console.warn('Failed to parse hero_professions:', e);
-        }
-      }
-
-      if (settings.hero_image) {
-        setHeroImage(settings.hero_image);
-      }
-    } catch (error) {
-      console.warn('Failed to load hero settings, using defaults:', error);
-    }
-  };
-
-  useEffect(() => {
-    loadSettings();
-  }, []);
-
-  // Setup polling untuk settings dengan interval lebih lama (2 jam)
-  // karena settings jarang berubah
-  usePolling({
-    enabled: true,
-    interval: 7200000, // 2 jam (2 * 60 * 60 * 1000 ms)
-    onPoll: loadSettings,
-  });
+  const [heroName] = useState(settings.title);
+  const [professions] = useState<string[]>(settings.professions);
+  const [heroImage, setHeroImage] = useState(settings.heroLogo);
 
   return (
     <section

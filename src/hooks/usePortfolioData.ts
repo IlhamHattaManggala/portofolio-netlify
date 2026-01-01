@@ -1,113 +1,37 @@
-import { useState, useEffect, useCallback } from 'react';
-import { fetchProjects, fetchTechnologies, fetchCertificates } from '../services/api';
-import { projects as staticProjects, technologies as staticTechnologies, sertifikat as staticCertificates } from '../components/constant';
-import type { TProject, TTechnology, TSertifikat } from '../components/types';
-import { usePolling } from './usePolling';
-import { POLLING_INTERVAL, POLLING_ENABLED } from '../config/api';
+import { useState } from 'react';
+import projectsData from '../data/projects';
+import technologiesData from '../data/skills';
+import certificatesData from '../data/certificates';
+import testimonialsData from '../data/testimonials';
+import type { TProject, TTechnology, TSertifikat, TTestimonial } from '../components/types';
 
 interface UsePortfolioDataReturn {
   projects: TProject[];
   technologies: TTechnology[];
   certificates: TSertifikat[];
+  testimonials: TTestimonial[];
   loading: boolean;
   error: string | null;
   isUsingFallback: boolean;
 }
 
 export const usePortfolioData = (): UsePortfolioDataReturn => {
-  const [projects, setProjects] = useState<TProject[]>(staticProjects);
-  const [technologies, setTechnologies] = useState<TTechnology[]>(staticTechnologies);
-  const [certificates, setCertificates] = useState<TSertifikat[]>(staticCertificates);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isUsingFallback, setIsUsingFallback] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-
-  const loadData = useCallback(async () => {
-    // Hanya set loading pada initial load
-    if (isInitialLoad) {
-      setLoading(true);
-      setIsInitialLoad(false);
-    }
-    
-    setError(null);
-    setIsUsingFallback(false);
-
-    try {
-      // Try to fetch from API
-      const [apiProjects, apiTechnologies, apiCertificates] = await Promise.all([
-        fetchProjects(),
-        fetchTechnologies(),
-        fetchCertificates(),
-      ]);
-
-      // Only update state with API data if arrays are not empty
-      // If API returns empty arrays, keep using static fallback data
-      let hasEmptyData = false;
-
-      if (apiProjects.length > 0) {
-        setProjects(apiProjects);
-      } else {
-        // API returned empty array, keep static data
-        hasEmptyData = true;
-      }
-
-      if (apiTechnologies.length > 0) {
-        setTechnologies(apiTechnologies);
-      } else {
-        // API returned empty array, keep static data
-        hasEmptyData = true;
-      }
-
-      if (apiCertificates.length > 0) {
-        setCertificates(apiCertificates);
-      } else {
-        // API returned empty array, keep static data
-        hasEmptyData = true;
-      }
-
-      // If any data is empty, use fallback
-      if (hasEmptyData) {
-        setIsUsingFallback(true);
-        setError('API tidak memiliki data, menggunakan data statik');
-      }
-      
-      // Log untuk debugging (bisa dihapus di production)
-      if (import.meta.env.DEV) {
-        console.log('Data updated:', {
-          projects: apiProjects.length > 0 ? apiProjects.length : 'using static',
-          technologies: apiTechnologies.length > 0 ? apiTechnologies.length : 'using static',
-          certificates: apiCertificates.length > 0 ? apiCertificates.length : 'using static',
-        });
-      }
-    } catch (err) {
-      // If API fails, use static data (already set as default)
-      console.warn('Using fallback static data:', err);
-      setIsUsingFallback(true);
-      setError('API tidak tersedia, menggunakan data statik');
-    } finally {
-      setLoading(false);
-    }
-  }, [isInitialLoad]);
-
-  // Initial load
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
-  // Setup polling untuk auto-refresh
-  // Polling akan selalu berjalan jika enabled, tidak peduli isUsingFallback
-  // karena mungkin API akan kembali tersedia
-  usePolling({
-    enabled: POLLING_ENABLED,
-    interval: POLLING_INTERVAL,
-    onPoll: loadData,
-  });
+  // Directly use static data as initial state
+  const [projects] = useState<TProject[]>(projectsData);
+  const [technologies] = useState<TTechnology[]>(technologiesData);
+  const [certificates] = useState<TSertifikat[]>(certificatesData);
+  const [testimonials] = useState<TTestimonial[]>(testimonialsData);
+  
+  // Since data is local, loading is always false and no error
+  const loading = false;
+  const error = null;
+  const isUsingFallback = false; // We are "always" using static files, but concept of fallback is gone
 
   return {
     projects,
     technologies,
     certificates,
+    testimonials,
     loading,
     error,
     isUsingFallback,

@@ -1,29 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { fetchTestimonials, submitTestimonial } from "../services/api";
-import { usePolling } from "../hooks/usePolling";
-import { POLLING_INTERVAL, POLLING_ENABLED } from "../config/api";
+import { usePortfolioData } from "../hooks/usePortfolioData";
+import type { TTestimonial } from "../components/types";
 import StarsBackground from "../components/StarsBackground";
 
-interface Testimonial {
-  id: number;
-  name: string;
-  position?: string;
-  company?: string;
-  content: string;
-  image?: string;
-  rating?: number;
-}
-
 const TestimonialsSection = () => {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { testimonials: staticTestimonials } = usePortfolioData();
+  const [testimonials, setTestimonials] = useState<TTestimonial[]>(staticTestimonials);
   const [showForm, setShowForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [selectedTestimonial, setSelectedTestimonial] = useState<Testimonial | null>(null);
+  const [selectedTestimonial, setSelectedTestimonial] = useState<TTestimonial | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   
@@ -36,66 +25,43 @@ const TestimonialsSection = () => {
     image: null as File | null,
   });
 
-  const loadTestimonials = async () => {
-    try {
-      const data = await fetchTestimonials();
-      setTestimonials(data);
-    } catch (error) {
-      console.warn('Failed to load testimonials, using empty array:', error);
-      setTestimonials([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadTestimonials();
-  }, []);
-
-  // Setup polling untuk auto-refresh testimonials
-  usePolling({
-    enabled: POLLING_ENABLED,
-    interval: POLLING_INTERVAL,
-    onPoll: loadTestimonials,
-  });
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
     setSubmitError(null);
     setSubmitSuccess(false);
 
-    try {
-      await submitTestimonial({
-        name: formData.name,
-        position: formData.position || undefined,
-        company: formData.company || undefined,
-        content: formData.content,
-        rating: formData.rating || undefined,
-        image: formData.image || undefined,
-      });
+    // Simulate network request
+    setTimeout(() => {
+        // Create a new dummy testimonial
+        const newTestimonial: TTestimonial = {
+            id: Date.now(),
+            name: formData.name,
+            position: formData.position || undefined,
+            company: formData.company || undefined,
+            content: formData.content,
+            rating: formData.rating || undefined,
+            image: undefined // Can't handle image upload without backend
+        };
 
-      setSubmitSuccess(true);
-      setFormData({
-        name: "",
-        position: "",
-        company: "",
-        content: "",
-        rating: 5,
-        image: null,
-      });
-      
-      // Reload testimonials after a delay
-      setTimeout(() => {
-        loadTestimonials();
-        setShowForm(false);
-        setSubmitSuccess(false);
-      }, 2000);
-    } catch (error: any) {
-      setSubmitError(error.message || 'Gagal mengirim testimoni. Silakan coba lagi.');
-    } finally {
-      setSubmitting(false);
-    }
+        setTestimonials([...testimonials, newTestimonial]);
+        setSubmitSuccess(true);
+        setFormData({
+            name: "",
+            position: "",
+            company: "",
+            content: "",
+            rating: 5,
+            image: null,
+        });
+        setSubmitting(false);
+
+        // Hide form after delay
+        setTimeout(() => {
+            setShowForm(false);
+            setSubmitSuccess(false);
+        }, 2000);
+    }, 1000);
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,7 +70,7 @@ const TestimonialsSection = () => {
     }
   };
 
-  const handleCardClick = (testimonial: Testimonial) => {
+  const handleCardClick = (testimonial: TTestimonial) => {
     setSelectedTestimonial(testimonial);
     setShowModal(true);
   };
@@ -118,16 +84,7 @@ const TestimonialsSection = () => {
     setIsHovered(hovering);
   };
 
-  if (loading) {
-    return (
-      <section className="dark:bg-gray-900 py-16 px-6 min-h-screen relative" id="testimonials">
-        <StarsBackground count={100} />
-        <div className="max-w-6xl mx-auto relative z-10">
-          <p className="text-gray-600 dark:text-gray-400 text-center">Memuat data...</p>
-        </div>
-      </section>
-    );
-  }
+
 
   return (
     <section className="dark:bg-gray-900 py-16 px-6 min-h-screen relative" id="testimonials">

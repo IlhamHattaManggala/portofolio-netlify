@@ -3,7 +3,7 @@ import type { IconType } from "react-icons";
 export type TReadme = {
   name?: string;
   icon?: IconType;
-}
+};
 
 export type TCommonProps = {
   title?: string;
@@ -15,6 +15,7 @@ export type TProject = {
   tipe: string;
   library: string[];
   image: string;
+  link?: string | null;
 } & Required<Pick<TCommonProps, "name">>;
 
 export type TTechnology = Required<Omit<TCommonProps, "title">>;
@@ -52,4 +53,14 @@ export type TArticle = {
   views: number;
   created_at?: string;
   updated_at?: string;
+};
+
+export type TTestimonial = {
+  id: number;
+  name: string;
+  position?: string;
+  company?: string;
+  content: string;
+  image?: string;
+  rating?: number;
 };

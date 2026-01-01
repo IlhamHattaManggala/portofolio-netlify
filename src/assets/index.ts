@@ -1,5 +1,6 @@
 import github from "./skills/github.png";
 import css from "./skills/css.png";
+import Profile from "./profile.png";
 import figma from "./skills/figma.png";
 import git from "./skills/git.png";
 import html from "./skills/html.png";
@@ -15,6 +16,7 @@ import ihGamers from "./projects/IhGamers!.png";
 import MyPorto from "./projects/PortoLama.png";
 import SenjaMobile from "./projects/SenjaMobile.png";
 import Caffeku from "./projects/Caffeku.png";
+import SampleCompany from "./projects/Sample-Company.png";
 import Mysql from "./skills/mysql.png";
 import Flask from "./skills/flask.png";
 import Flutter from "./skills/Flutter.png";
@@ -46,7 +48,8 @@ import Udemy3 from "../assets/portfolio/Udemy/Master Web Mobile Design Figma UI 
 import Udemy4 from "../assets/portfolio/Udemy/Sertifikat Udemy WebDriver.jpg"
 import Udemy5 from "../assets/portfolio/Udemy/Sertifikat Udemy.jpg"
 import Anjing from "../assets/gif/anjing.gif";
-
+import Juara_2_Softdev from "../assets/portfolio/Lomba/E Sertifikat Ilham Hatta Manggala -1.jpg";
+import Magang_IT from "../assets/portfolio/Magang/Sertif IT.jpg";
 
 export {
   github,
@@ -59,6 +62,7 @@ export {
   reactjs,
   tailwind,
   typescript,
+  Profile,
   ChattbotJawa,
   FoodPlanMobile,
   FoodPlanWeb,
@@ -66,6 +70,7 @@ export {
   Caffeku,
   MyPorto,
   SenjaMobile,
+  SampleCompany,
   Dart,
   Flask,
   Flutter,
@@ -96,5 +101,7 @@ export {
   Udemy3,
   Udemy4,
   Udemy5,
-  Anjing
+  Anjing,
+  Juara_2_Softdev,
+  Magang_IT
 };

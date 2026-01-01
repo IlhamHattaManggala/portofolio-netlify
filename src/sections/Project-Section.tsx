@@ -70,7 +70,7 @@ const ProjectSection = () => {
                   <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
                     {project.descriptions}
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 mb-3">
                     {project.library.map((tech, i) => (
                       <span
                         key={i}
@@ -80,6 +80,16 @@ const ProjectSection = () => {
                       </span>
                     ))}
                   </div>
+                  {project.link && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
+                    >
+                      Lihat Project →
+                    </a>
+                  )}
                 </div>
               </motion.div>
             ))}

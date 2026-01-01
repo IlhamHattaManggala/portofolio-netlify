@@ -44,12 +44,14 @@ export const fetchProjects = async (): Promise<TProject[]> => {
         tipe: string;
         library?: string[];
         image?: string;
+        link?: string | null;
       }) => ({
         name: project.name,
         descriptions: project.descriptions,
         tipe: project.tipe,
         library: project.library || [],
         image: project.image || '',
+        link: project.link || null,
       }));
     }
     

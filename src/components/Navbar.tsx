@@ -1,15 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { fetchSettings } from "../services/api";
-import { usePolling } from "../hooks/usePolling";
-import myLogo from "../assets/my-profile.png";
+import { settings } from "../data/settings";
 import "../App.css";
 
 const Navbar = () => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [logo, setLogo] = useState(myLogo);
-  const [siteName, setSiteName] = useState("Ilham Hatta Manggala");
-  const [resumeUrl, setResumeUrl] = useState("/CV - ILHAM HATTA MANGGALA.pdf");
+  const [logo, setLogo] = useState(settings.navbarLogo);
+  const [siteName] = useState(settings.title);
+  const [resumeUrl] = useState(settings.resume);
   const location = useLocation();
   const navigate = useNavigate();
   
@@ -43,40 +41,6 @@ const Navbar = () => {
     setIsMobileOpen(false);
   };
 
-  const loadSettings = async () => {
-    try {
-      const settings = await fetchSettings();
-      
-      // Use hero_image as logo (fallback to logo if hero_image not available)
-      if (settings.hero_image) {
-        setLogo(settings.hero_image);
-      } else if (settings.logo) {
-        setLogo(settings.logo);
-      }
-      
-      if (settings.site_name) {
-        setSiteName(settings.site_name);
-      }
-      
-      if (settings.resume_pdf) {
-        setResumeUrl(settings.resume_pdf);
-      }
-    } catch (error) {
-      console.warn('Failed to load navbar settings, using defaults:', error);
-    }
-  };
-
-  useEffect(() => {
-    loadSettings();
-  }, []);
-
-  // Setup polling untuk settings dengan interval lebih lama (2 jam)
-  // karena settings jarang berubah
-  usePolling({
-    enabled: true,
-    interval: 7200000, // 2 jam (2 * 60 * 60 * 1000 ms)
-    onPoll: loadSettings,
-  });
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-gray-900 border-b border-gray-200 shadow-sm z-50">
@@ -88,7 +52,7 @@ const Navbar = () => {
               src={logo} 
               alt="Logo" 
               className="h-8 w-8" 
-              onError={() => setLogo(myLogo)}
+              onError={() => setLogo(settings.navbarLogo)}
             />
             <a href="/" className="text-xl font-bold">
               {siteName}
