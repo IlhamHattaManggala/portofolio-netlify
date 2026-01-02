@@ -8,6 +8,7 @@ import {
   ChattbotJawa,
   Caffeku,
   SampleCompany,
+  SampleSchool,
 } from "../assets";
 
 const projects: TProject[] = [
@@ -81,7 +82,16 @@ const projects: TProject[] = [
     tipe: "Website",
     library: ["React", "Tailwind"],
     image: SampleCompany,
-    link: null,
+    link: "https://company-sample.vercel.app/",
+  },
+  {
+    name: "Sample School Profile",
+    descriptions:
+      "Sample School Profile adalah website yang menampilkan informasi sekolah, layanan, dan kontak. Dibangun menggunakan React + Tailwind.",
+    tipe: "Website",
+    library: ["React", "Tailwind"],
+    image: SampleSchool,
+    link: "https://school-profile-delta.vercel.app/",
   },
 ];
 

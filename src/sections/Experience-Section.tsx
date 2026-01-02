@@ -1,52 +1,10 @@
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { fetchExperiences } from "../services/api";
-import { usePolling } from "../hooks/usePolling";
-import { POLLING_INTERVAL, POLLING_ENABLED } from "../config/api";
+import { usePortfolioData } from "../hooks/usePortfolioData";
 import { FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
 import StarsBackground from "../components/StarsBackground";
 
-interface Experience {
-  id: number;
-  company: string;
-  position: string;
-  description?: string;
-  start_date: string;
-  end_date?: string | null;
-  is_current: boolean;
-  location?: string;
-}
-
 const ExperienceSection = () => {
-  const [experiences, setExperiences] = useState<Experience[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadExperiences = async () => {
-    if (loading && experiences.length === 0) {
-      setLoading(true);
-    }
-    
-    try {
-      const data = await fetchExperiences();
-      setExperiences(data);
-    } catch (error) {
-      console.warn('Failed to load experiences, using empty array:', error);
-      setExperiences([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadExperiences();
-  }, []);
-
-  // Setup polling untuk auto-refresh experiences
-  usePolling({
-    enabled: POLLING_ENABLED,
-    interval: POLLING_INTERVAL,
-    onPoll: loadExperiences,
-  });
+  const { experiences, loading } = usePortfolioData();
 
   if (loading) {
     return (

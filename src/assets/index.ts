@@ -17,6 +17,7 @@ import MyPorto from "./projects/PortoLama.png";
 import SenjaMobile from "./projects/SenjaMobile.png";
 import Caffeku from "./projects/Caffeku.png";
 import SampleCompany from "./projects/Sample-Company.png";
+import SampleSchool from "./projects/SampleSchoolProfile.png";
 import Mysql from "./skills/mysql.png";
 import Flask from "./skills/flask.png";
 import Flutter from "./skills/Flutter.png";
@@ -76,6 +77,7 @@ export {
   MyPorto,
   SenjaMobile,
   SampleCompany,
+  SampleSchool,
   Dart,
   Flask,
   Flutter,
