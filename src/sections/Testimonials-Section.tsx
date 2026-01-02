@@ -5,70 +5,11 @@ import type { TTestimonial } from "../components/types";
 import StarsBackground from "../components/StarsBackground";
 
 const TestimonialsSection = () => {
-  const { testimonials: staticTestimonials } = usePortfolioData();
-  const [testimonials, setTestimonials] = useState<TTestimonial[]>(staticTestimonials);
-  const [showForm, setShowForm] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { testimonials } = usePortfolioData();
   const [showModal, setShowModal] = useState(false);
   const [selectedTestimonial, setSelectedTestimonial] = useState<TTestimonial | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  
-  const [formData, setFormData] = useState({
-    name: "",
-    position: "",
-    company: "",
-    content: "",
-    rating: 5,
-    image: null as File | null,
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setSubmitError(null);
-    setSubmitSuccess(false);
-
-    // Simulate network request
-    setTimeout(() => {
-        // Create a new dummy testimonial
-        const newTestimonial: TTestimonial = {
-            id: Date.now(),
-            name: formData.name,
-            position: formData.position || undefined,
-            company: formData.company || undefined,
-            content: formData.content,
-            rating: formData.rating || undefined,
-            image: undefined // Can't handle image upload without backend
-        };
-
-        setTestimonials([...testimonials, newTestimonial]);
-        setSubmitSuccess(true);
-        setFormData({
-            name: "",
-            position: "",
-            company: "",
-            content: "",
-            rating: 5,
-            image: null,
-        });
-        setSubmitting(false);
-
-        // Hide form after delay
-        setTimeout(() => {
-            setShowForm(false);
-            setSubmitSuccess(false);
-        }, 2000);
-    }, 1000);
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFormData({ ...formData, image: e.target.files[0] });
-    }
-  };
 
   const handleCardClick = (testimonial: TTestimonial) => {
     setSelectedTestimonial(testimonial);
@@ -83,8 +24,6 @@ const TestimonialsSection = () => {
   const handleCardHover = (hovering: boolean) => {
     setIsHovered(hovering);
   };
-
-
 
   return (
     <section className="dark:bg-gray-900 py-16 px-6 min-h-screen relative" id="testimonials">
@@ -103,151 +42,7 @@ const TestimonialsSection = () => {
           <p className="text-gray-600 dark:text-gray-400 mb-6">
             Apa kata mereka tentang saya
           </p>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
-          >
-            {showForm ? "Tutup Form" : "Berikan Testimoni"}
-          </button>
         </motion.div>
-
-        {/* Testimonial Form */}
-        {showForm && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-12 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 md:p-8"
-          >
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-              Berikan Testimoni Anda
-            </h3>
-            
-            {submitSuccess && (
-              <div className="mb-4 p-4 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-lg">
-                Terima kasih! Testimoni Anda telah dikirim dan akan ditinjau oleh admin.
-              </div>
-            )}
-            
-            {submitError && (
-              <div className="mb-4 p-4 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-lg">
-                {submitError}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Nama <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    placeholder="Nama lengkap"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Posisi / Jabatan
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.position}
-                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    placeholder="Contoh: Frontend Developer"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Perusahaan / Organisasi
-                </label>
-                <input
-                  type="text"
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Nama perusahaan (opsional)"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Testimoni <span className="text-red-500">*</span>
-                </label>
-                <textarea
-                  required
-                  rows={4}
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  placeholder="Tulis testimoni Anda di sini..."
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Rating (1-5)
-                  </label>
-                  <select
-                    value={formData.rating}
-                    onChange={(e) => setFormData({ ...formData, rating: parseInt(e.target.value) })}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  >
-                    <option value={5}>5 ⭐⭐⭐⭐⭐</option>
-                    <option value={4}>4 ⭐⭐⭐⭐</option>
-                    <option value={3}>3 ⭐⭐⭐</option>
-                    <option value={2}>2 ⭐⭐</option>
-                    <option value={1}>1 ⭐</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Foto Profil (Opsional)
-                  </label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                  />
-                  {formData.image && (
-                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                      File: {formData.image.name}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {submitting ? "Mengirim..." : "Kirim Testimoni"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowForm(false);
-                    setSubmitError(null);
-                    setSubmitSuccess(false);
-                  }}
-                  className="px-6 py-3 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors duration-200 font-medium"
-                >
-                  Batal
-                </button>
-              </div>
-            </form>
-          </motion.div>
-        )}
 
         {/* Testimonials 1 Baris Horizontal dengan Animasi Scroll */}
         {testimonials.length > 0 && (
@@ -341,10 +136,10 @@ const TestimonialsSection = () => {
           </div>
         )}
 
-        {testimonials.length === 0 && !showForm && (
+        {testimonials.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-600 dark:text-gray-400">
-              Belum ada testimoni. Jadilah yang pertama memberikan testimoni!
+              Belum ada testimoni.
             </p>
           </div>
         )}

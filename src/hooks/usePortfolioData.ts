@@ -3,13 +3,15 @@ import projectsData from '../data/projects';
 import technologiesData from '../data/skills';
 import certificatesData from '../data/certificates';
 import testimonialsData from '../data/testimonials';
-import type { TProject, TTechnology, TSertifikat, TTestimonial } from '../components/types';
+import blogsData from '../data/blogs';
+import type { TProject, TTechnology, TSertifikat, TTestimonial, TArticle } from '../components/types';
 
 interface UsePortfolioDataReturn {
   projects: TProject[];
   technologies: TTechnology[];
   certificates: TSertifikat[];
   testimonials: TTestimonial[];
+  articles: TArticle[];
   loading: boolean;
   error: string | null;
   isUsingFallback: boolean;
@@ -21,6 +23,7 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
   const [technologies] = useState<TTechnology[]>(technologiesData);
   const [certificates] = useState<TSertifikat[]>(certificatesData);
   const [testimonials] = useState<TTestimonial[]>(testimonialsData);
+  const [articles] = useState<TArticle[]>(blogsData);
   
   // Since data is local, loading is always false and no error
   const loading = false;
@@ -32,6 +35,7 @@ export const usePortfolioData = (): UsePortfolioDataReturn => {
     technologies,
     certificates,
     testimonials,
+    articles,
     loading,
     error,
     isUsingFallback,

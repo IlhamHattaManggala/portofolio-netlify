@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { fetchArticles } from "../services/api";
+// import { fetchArticles } from "../services/api";
 import type { TArticle } from "../components/types";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
@@ -9,40 +8,15 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FloatingSocials from "../components/FloatingSocials";
 import DynamicHead from "../components/DynamicHead";
-import { usePolling } from "../hooks/usePolling";
-import { POLLING_INTERVAL, POLLING_ENABLED } from "../config/api";
+// import { usePolling } from "../hooks/usePolling";
+// import { POLLING_INTERVAL, POLLING_ENABLED } from "../config/api";
+import { usePortfolioData } from "../hooks/usePortfolioData";
+import { useLiveViews } from "../hooks/useLiveViews";
 
 const BlogListPage = () => {
-  const [articles, setArticles] = useState<TArticle[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { articles: staticArticles, loading } = usePortfolioData();
+  const articles = useLiveViews(staticArticles);
   const navigate = useNavigate();
-
-  const loadArticles = async () => {
-    if (loading && articles.length === 0) {
-      setLoading(true);
-    }
-    
-    try {
-      const data = await fetchArticles();
-      setArticles(data);
-    } catch (error) {
-      console.warn('Failed to load articles, using empty array:', error);
-      setArticles([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadArticles();
-  }, []);
-
-  // Setup polling untuk auto-refresh articles
-  usePolling({
-    enabled: POLLING_ENABLED,
-    interval: POLLING_INTERVAL,
-    onPoll: loadArticles,
-  });
 
   const handleArticleClick = (article: TArticle) => {
     // Navigate to article detail page

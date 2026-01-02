@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { fetchArticle } from "../services/api";
 import type { TArticle } from "../components/types";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -11,41 +10,60 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import FloatingSocials from "../components/FloatingSocials";
 import DynamicHead from "../components/DynamicHead";
+import { useRef } from "react";
+import { usePortfolioData } from "../hooks/usePortfolioData";
+import { incrementArticleView, onArticleViewChange } from "../services/firebase";
 
 const ArticleDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { articles } = usePortfolioData();
   const [article, setArticle] = useState<TArticle | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [liveViews, setLiveViews] = useState<number>(0);
+  const viewIncremented = useRef(false);
 
   useEffect(() => {
-    const loadArticle = async () => {
+    let unsubscribe: (() => void) | undefined;
+
+    const loadArticle = () => {
       if (!slug) {
         setError("Slug artikel tidak ditemukan");
         setLoading(false);
         return;
       }
 
-      try {
-        setLoading(true);
-        const data = await fetchArticle(slug);
-        if (data) {
-          setArticle(data);
-          // Views sudah di-increment di backend ketika fetchArticle dipanggil
-        } else {
-          setError("Artikel tidak ditemukan");
+      setLoading(true);
+      const foundArticle = articles.find((a) => a.slug === slug);
+      
+      if (foundArticle) {
+        setArticle(foundArticle);
+        // Initialize with static views, but override if live views are available
+        setLiveViews(foundArticle.views || 0);
+
+        // Increment view count only once per page load
+        if (!viewIncremented.current) {
+          incrementArticleView(slug);
+          viewIncremented.current = true;
         }
-      } catch (err) {
-        console.error("Failed to load article:", err);
-        setError("Gagal memuat artikel");
-      } finally {
-        setLoading(false);
+
+        // Listen for real-time view updates
+        unsubscribe = onArticleViewChange(slug, (views) => {
+          setLiveViews(views);
+        });
+      } else {
+        setError("Artikel tidak ditemukan");
       }
+      setLoading(false);
     };
 
     loadArticle();
-  }, [slug]);
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [slug, articles]);
 
   if (loading) {
     return (
@@ -123,7 +141,7 @@ const ArticleDetail = () => {
                     {format(new Date(article.published_at), "dd MMMM yyyy", { locale: id })}
                   </span>
                 )}
-                <span>{article.views} views</span>
+                <span>{liveViews} views</span>
               </div>
 
               {article.featured_image && (
@@ -146,8 +164,19 @@ const ArticleDetail = () => {
             </div>
 
             {/* Article Content */}
-            <div className="prose prose-lg dark:prose-invert max-w-none [&_p]:text-left [&_h1]:text-left [&_h2]:text-left [&_h3]:text-left [&_h4]:text-left [&_h5]:text-left [&_h6]:text-left">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <div className="max-w-none text-left">
+              <ReactMarkdown 
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  ol: ({node, ...props}) => <ol className="list-decimal list-outside ms-8 my-4 space-y-2 text-gray-900 dark:text-gray-100" {...props} />,
+                  ul: ({node, ...props}) => <ul className="list-disc list-outside ms-8 my-4 space-y-2 text-gray-900 dark:text-gray-100" {...props} />,
+                  li: ({node, ...props}) => <li className="pl-2" {...props} />,
+                  p: ({node, ...props}) => <p className="mb-4 text-gray-700 dark:text-gray-300 leading-relaxed" {...props} />,
+                  h1: ({node, ...props}) => <h1 className="text-3xl font-bold mt-8 mb-4 text-gray-900 dark:text-white block" {...props} />,
+                  h2: ({node, ...props}) => <h2 className="text-2xl font-bold mt-8 mb-4 text-gray-900 dark:text-white block" {...props} />,
+                  h3: ({node, ...props}) => <h3 className="text-xl font-bold mt-6 mb-3 text-gray-900 dark:text-white block" {...props} />,
+                }}
+              >
                 {article.content}
               </ReactMarkdown>
             </div>

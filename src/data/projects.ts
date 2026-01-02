@@ -18,6 +18,7 @@ const projects: TProject[] = [
     tipe: "Website",
     library: ["HTML", "CSS", "JavaScript"],
     image: MyPorto,
+    link: "https://github.com/IlhamHattaManggala/portofolio-netlify",
   },
   {
     name: "Aplikasi Rekomendasi Resep Masakan Berbasis AI Berdasarkan Bahan Makanan",
@@ -26,6 +27,7 @@ const projects: TProject[] = [
     tipe: "Website",
     library: ["Flask", "Python", "Tensorflow", "Bootstrap", "MySQL"],
     image: FoodPlanWeb,
+    link: null,
   },
   {
     name: "Aplikasi Rekomendasi Resep Masakan Berbasis AI Berdasarkan Bahan Makanan",
@@ -34,6 +36,7 @@ const projects: TProject[] = [
     tipe: "Website",
     library: ["Flutter", "Dart", "Firebase", "API"],
     image: FoodPlanMobile,
+    link: null,
   },
   {
     name: "Aplikasi Monitoring Belajar Tari",
@@ -42,6 +45,7 @@ const projects: TProject[] = [
     tipe: "Website",
     library: ["Flutter", "Dart", "GetX Patern", "Get CLI", "Firebase"],
     image: SenjaMobile,
+    link: null,
   },
   {
     name: "Sistem Rekomendasi Karakter Game Genshin Impact Metode TOPSIS dan SAW",
@@ -50,6 +54,7 @@ const projects: TProject[] = [
     tipe: "Website",
     library: ["Laravel", "PHP", "Bootstrap", "TOPSIS", "SAW"],
     image: ihGamers,
+    link: null,
   },
   {
     name: "Chatbot Obrolan Jawa",
@@ -58,6 +63,7 @@ const projects: TProject[] = [
     tipe: "Website",
     library: ["HTML", "CSS", "Bootstrap", "Tensorflow"],
     image: ChattbotJawa,
+    link: null,
   },
   {
     name: "Sistem Reservasi Café",
@@ -66,6 +72,7 @@ const projects: TProject[] = [
     tipe: "Website",
     library: ["Laravel", "PHP", "React", "Tailwind"],
     image: Caffeku,
+    link: null,
   },
   {
     name: "Sample Company",
@@ -74,6 +81,7 @@ const projects: TProject[] = [
     tipe: "Website",
     library: ["React", "Tailwind"],
     image: SampleCompany,
+    link: null,
   },
 ];
 

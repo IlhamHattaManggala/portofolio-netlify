@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FiExternalLink } from "react-icons/fi";
 import { usePortfolioData } from "../hooks/usePortfolioData";
 import { motion } from "framer-motion";
 import StarsBackground from "../components/StarsBackground";
@@ -53,18 +54,31 @@ const ProjectSection = () => {
             {currentProjects.map((project, index) => (
               <motion.div
                 key={startIndex + index}
-                className="card border-2 border-gray-600 rounded-lg overflow-hidden"
+                className="card border-2 border-gray-600 rounded-lg overflow-hidden relative group"
                 whileHover={{ scale: 1.05 }}
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <img
-                  src={project.image}
-                  alt={project.name}
-                  className="w-full h-48 object-cover"
-                />
+                <div className="relative">
+                  <img
+                    src={project.image}
+                    alt={project.name}
+                    className="w-full h-48 object-cover"
+                  />
+                  {project.link && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute top-2 right-2 p-2 bg-white/30 backdrop-blur-md hover:bg-white/50 text-white rounded-full transition-all duration-300 z-10 shadow-lg"
+                      title="Lihat Project"
+                    >
+                      <FiExternalLink size={15} color="black" />
+                    </a>
+                  )}
+                </div>
                 <div className="p-4 text-left dark:text-white">
                   <h3 className="text-xl font-semibold mb-2">{project.name}</h3>
                   <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
@@ -80,16 +94,6 @@ const ProjectSection = () => {
                       </span>
                     ))}
                   </div>
-                  {project.link && (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
-                    >
-                      Lihat Project →
-                    </a>
-                  )}
                 </div>
               </motion.div>
             ))}

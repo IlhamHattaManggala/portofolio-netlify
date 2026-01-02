@@ -50,6 +50,11 @@ import Udemy5 from "../assets/portfolio/Udemy/Sertifikat Udemy.jpg"
 import Anjing from "../assets/gif/anjing.gif";
 import Juara_2_Softdev from "../assets/portfolio/Lomba/E Sertifikat Ilham Hatta Manggala -1.jpg";
 import Magang_IT from "../assets/portfolio/Magang/Sertif IT.jpg";
+import ReactHeader from "./blogs/react-header.png";
+import TailwindHeader from "./blogs/tailwind-header.png";
+import TypescriptHeader from "./blogs/typescript-header.png";
+import magangIT from "./blogs/magangIT.jpg";
+import juara2 from "./blogs/juara2softdev.png"
 
 export {
   github,
@@ -103,5 +108,10 @@ export {
   Udemy5,
   Anjing,
   Juara_2_Softdev,
-  Magang_IT
+  Magang_IT,
+  ReactHeader,
+  TailwindHeader,
+  TypescriptHeader,
+  magangIT,
+  juara2
 };
