@@ -21,7 +21,7 @@ const HeroSection = () => {
         {/* Gambar mengambang */}
         <motion.img
           src={heroImage}
-          alt="Profile Floating"
+          alt="Ilham Hatta Manggala Profile"
           className="w-52 sm:w-64 lg:w-72 absolute top-10 mx-auto left-0 right-0 opacity-90 pointer-events-none"
           animate={{ y: [0, -20, 0] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
