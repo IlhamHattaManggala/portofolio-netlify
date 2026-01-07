@@ -6,7 +6,7 @@ export const settings = {
   navbarLogo: Profile,
   favicon: Profile,
   heroLogo: Profile,
-  professions: ["Frontend Developer", "Flutter Developer"],
+  professions: ["Web Developer", "Flutter Developer"],
   resume: "/CV - ILHAM HATTA MANGGALA.pdf",
 };
 
