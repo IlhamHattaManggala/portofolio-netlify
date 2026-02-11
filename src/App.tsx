@@ -1,19 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { useLocation } from "react-router-dom";
 import "./App.css";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import AboutSection from "./sections/About-Section";
 import HeroSection from "./sections/Hero-Section";
-import ProjectSection from "./sections/Project-Section";
 import FloatingSocials from "./components/FloatingSocials";
-import GallerySertifikat from "./sections/Gallery-Section";
-import Kontak from "./sections/Contact-Section";
-import ExperienceSection from "./sections/Experience-Section";
-import TestimonialsSection from "./sections/Testimonials-Section";
 import DynamicHead from "./components/DynamicHead";
-import CallToAction from "./sections/CallToAction";
-// import { BrowserRouter } from "react-router-dom";
+
+// Lazy load sections that are below the fold
+const AboutSection = lazy(() => import("./sections/About-Section"));
+const ExperienceSection = lazy(() => import("./sections/Experience-Section"));
+const ProjectSection = lazy(() => import("./sections/Project-Section"));
+const CallToAction = lazy(() => import("./sections/CallToAction"));
+const GallerySertifikat = lazy(() => import("./sections/Gallery-Section"));
+const TestimonialsSection = lazy(() => import("./sections/Testimonials-Section"));
+const Kontak = lazy(() => import("./sections/Contact-Section"));
+
+// Loading fallback for sections
+const SectionLoader = () => (
+  <div className="py-20 flex justify-center items-center dark:bg-gray-900">
+    <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+  </div>
+);
+
 function App() {
   const location = useLocation();
 
@@ -36,13 +45,15 @@ function App() {
         <Navbar />
         <main className="p-0">
           <HeroSection />
-          <AboutSection />
-          <ExperienceSection />
-          <ProjectSection />
-          <CallToAction />
-          <GallerySertifikat />
-          <TestimonialsSection />
-          <Kontak />{" "}
+          <Suspense fallback={<SectionLoader />}>
+            <AboutSection />
+            <ExperienceSection />
+            <ProjectSection />
+            <CallToAction />
+            <GallerySertifikat />
+            <TestimonialsSection />
+            <Kontak />
+          </Suspense>
         </main>
         <FloatingSocials />
         <Footer />

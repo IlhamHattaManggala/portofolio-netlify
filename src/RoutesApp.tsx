@@ -10,7 +10,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import { useInitialLoad } from "./hooks/useInitialLoad";
 
 const RoutesApp = () => {
-  const isLoading = useInitialLoad(4000); // Minimum 4 seconds loading time
+  const isLoading = useInitialLoad(1500); // Reduced from 4000 to 1500 for better PageSpeed score
 
   return (
     <Router>

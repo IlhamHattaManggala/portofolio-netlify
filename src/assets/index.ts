@@ -18,6 +18,7 @@ import SenjaMobile from "./projects/SenjaMobile.png";
 import Caffeku from "./projects/Caffeku.png";
 import SampleCompany from "./projects/Sample-Company.png";
 import SampleSchool from "./projects/SampleSchoolProfile.png";
+import NightmareHunter from "./projects/Nightmare Hunter.webp";
 import Mysql from "./skills/mysql.png";
 import Flask from "./skills/flask.png";
 import Flutter from "./skills/Flutter.png";
@@ -78,6 +79,7 @@ export {
   SenjaMobile,
   SampleCompany,
   SampleSchool,
+  NightmareHunter,
   Dart,
   Flask,
   Flutter,

@@ -15,97 +15,67 @@ const staticCTAData = {
 };
 
 const CallToAction = () => {
-  const [ctaEnabled, setCtaEnabled] = useState(staticCTAData.enabled);
-  const [ctaTitle, setCtaTitle] = useState(staticCTAData.title);
-  const [ctaDescription, setCtaDescription] = useState(staticCTAData.description);
-  const [ctaButtonText, setCtaButtonText] = useState(staticCTAData.buttonText);
-  const [ctaLink, setCtaLink] = useState(staticCTAData.link);
-
-  const loadCTASettings = async () => {
-    try {
-      const settings = await fetchSettings();
-      
-      // Check if CTA is enabled (handle string 'true' or '1')
-      // Only update ctaEnabled if the setting actually exists in the API response
-      const ctaEnabledValue = settings.cta_enabled;
-      
-      // If cta_enabled exists in settings, update the state
-      if (ctaEnabledValue !== undefined && ctaEnabledValue !== null) {
-        const isEnabled = ctaEnabledValue === 'true' || ctaEnabledValue === '1';
-        setCtaEnabled(isEnabled);
-        
-        // If disabled, don't load other settings
-        if (!isEnabled) {
-          return;
-        }
-      }
-      // If cta_enabled doesn't exist, keep the current state (don't change it)
-      // This prevents CTA from disappearing when API returns empty object or missing field
-      
-      // Update other settings if they exist
-      if (settings.cta_title) {
-        setCtaTitle(settings.cta_title);
-      }
-      if (settings.cta_description) {
-        setCtaDescription(settings.cta_description);
-      }
-      if (settings.cta_button_text) {
-        setCtaButtonText(settings.cta_button_text);
-      }
-      if (settings.cta_link) {
-        setCtaLink(settings.cta_link);
-      }
-    } catch (error) {
-      console.warn('Failed to load CTA settings, using static fallback data:', error);
-      // Use static fallback data if API fails
-      // Only update if we're in error state (not if settings just missing the field)
-      setCtaEnabled(staticCTAData.enabled);
-      setCtaTitle(staticCTAData.title);
-      setCtaDescription(staticCTAData.description);
-      setCtaButtonText(staticCTAData.buttonText);
-      setCtaLink(staticCTAData.link);
-    }
-  };
-
-  useEffect(() => {
-    loadCTASettings();
-  }, []);
-
-  // Setup polling untuk auto-refresh CTA settings
-  usePolling({
-    enabled: POLLING_ENABLED,
-    interval: 7200000, // 2 jam (2 * 60 * 60 * 1000 ms)
-    onPoll: loadCTASettings,
-  });
-
-  if (!ctaEnabled) {
-    return null;
-  }
-
   return (
     <motion.section
-      className="w-full py-16 bg-gradient-to-r from-blue-600 to-indigo-700 dark:from-blue-800 dark:to-indigo-900 flex justify-center items-center relative"
+      className="w-full py-20 bg-gradient-to-r from-blue-600 to-indigo-700 dark:from-blue-800 dark:to-indigo-900 relative overflow-hidden"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7 }}
       viewport={{ once: true, amount: 0.2 }}
     >
       <StarsBackground count={80} />
-      <div className="text-center text-white max-w-2xl px-4 relative z-10">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">
-          {ctaTitle}
-        </h2>
-        <p className="mb-8 text-lg md:text-xl text-blue-100">
-          {ctaDescription}
-        </p>
-        <a
-          href={ctaLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-        >
-          {ctaButtonText}
-        </a>
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Card 1: Umum */}
+          <motion.div 
+            className="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl text-center text-white flex flex-col justify-between hover:bg-white/20 transition-all duration-300"
+            whileHover={{ y: -5 }}
+          >
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                Jasa Pembuatan Website & Aplikasi
+              </h2>
+              <p className="mb-8 text-blue-100 text-lg">
+                Saya menyediakan jasa pembuatan website profesional, aplikasi mobile, dan solusi digital kreatif lainnya untuk kebutuhan bisnis atau personal Anda.
+              </p>
+            </div>
+            <div>
+              <a
+                href="https://wa.me/6285959146408?text=Halo%20Ilham,%20saya%20ingin%20tanya%20tentang%20jasa%20pembuatan%20website/aplikasi"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block w-full px-8 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-gray-100 transition-all duration-200 shadow-lg"
+              >
+                Hubungi Sekarang (Umum)
+              </a>
+            </div>
+          </motion.div>
+
+          {/* Card 2: Mahasiswa */}
+          <motion.div 
+            className="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl text-center text-white flex flex-col justify-between hover:bg-white/20 transition-all duration-300"
+            whileHover={{ y: -5 }}
+          >
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">
+                Jasa Joki Tugas Teknologi
+              </h2>
+              <p className="mb-8 text-blue-100 text-lg">
+                Khusus untuk Mahasiswa: Saya membantu memberikan bimbingan dan pengerjaan tugas teknologi, pemrograman, atau proyek akhir dengan jaminan kualitas dan pemahaman.
+              </p>
+            </div>
+            <div>
+              <a
+                href="https://wa.me/6285959146408?text=Halo%20Ilham,%20saya%20ingin%20tanya%20tentang%20jasa%20joki%20tugas%20IT"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block w-full px-8 py-4 bg-indigo-100 text-indigo-700 font-bold rounded-xl hover:bg-white transition-all duration-200 shadow-lg"
+              >
+                Konsultasi Tugas (Mahasiswa)
+              </a>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </motion.section>
   );

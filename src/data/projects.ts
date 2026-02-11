@@ -9,9 +9,20 @@ import {
   Caffeku,
   SampleCompany,
   SampleSchool,
+  NightmareHunter,
 } from "../assets";
 
 const projects: TProject[] = [
+  {
+    name: "Nightmare Hunter",
+    descriptions:
+      "Game horor yang dibangun menggunakan Unity dan C#. Game ini memiliki fitur-fitur seperti sistem inventaris, sistem crafting, dan sistem pertarungan.",
+    tipe: "Game",
+    library: ["Unity", "C#"],
+    image: NightmareHunter,
+    link: "https://github.com/IlhamHattaManggala/Nighmare-Hunter",
+    video: "https://drive.google.com/file/d/1X8oeXUTnLxzvLkFlVfwlgetE8kveJRhu/view?usp=sharing", // Placeholder video link
+  },
   {
     name: "Website Portofolio",
     descriptions:

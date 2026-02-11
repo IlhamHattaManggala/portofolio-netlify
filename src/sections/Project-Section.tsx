@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiExternalLink } from "react-icons/fi";
+import { FiExternalLink, FiPlay } from "react-icons/fi";
 import { usePortfolioData } from "../hooks/usePortfolioData";
 import { motion } from "framer-motion";
 import StarsBackground from "../components/StarsBackground";
@@ -66,7 +66,20 @@ const ProjectSection = () => {
                     src={project.image}
                     alt={project.name}
                     className="w-full h-48 object-cover"
+                    loading="lazy"
                   />
+                  {project.video && (
+                    <a
+                      href={project.video}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute top-2 left-2 p-2 bg-blue-600/80 backdrop-blur-md hover:bg-blue-600 text-white rounded-full transition-all duration-300 z-10 shadow-lg flex items-center gap-2 pr-3"
+                      title="Lihat Video Demo"
+                    >
+                      <FiPlay size={15} color="white" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider">Demo</span>
+                    </a>
+                  )}
                   {project.link && (
                     <a
                       href={project.link}

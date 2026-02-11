@@ -148,6 +148,7 @@ const GallerySertifikat = () => {
                 alt={title}
                 className="w-full h-48 object-cover"
                 style={{ flexShrink: 0 }}
+                loading="lazy"
               />
               <div className="p-4 flex-1 flex flex-col justify-between">
                 <div>

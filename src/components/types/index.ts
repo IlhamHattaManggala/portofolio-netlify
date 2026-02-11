@@ -16,6 +16,7 @@ export type TProject = {
   library: string[];
   image: string;
   link?: string | null;
+  video?: string | null;
 } & Required<Pick<TCommonProps, "name">>;
 
 export type TTechnology = Required<Omit<TCommonProps, "title">>;
